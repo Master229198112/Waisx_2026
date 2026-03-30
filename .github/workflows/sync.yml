@@ -1,0 +1,28 @@
+name: Sync to Official Repository
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Personal Repo
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          token: ${{ secrets.OFFICIAL_GIT_TOKEN }}
+
+      - name: Push to Official Repo
+        env:
+          OFFICIAL_TOKEN: ${{ secrets.OFFICIAL_GIT_TOKEN }}
+        run: |
+          # Configure Git Identity
+          git config --global user.email "sync-bot@example.com"
+          git config --global user.name "Sync Bot"
+          
+          # Add remote and push
+          git remote add official_repo https://x-access-token:${OFFICIAL_TOKEN}@github.com/evidentia-project/WAISx.git
+          git push official_repo main --force
